@@ -1,0 +1,28 @@
+{
+  "nodes": {
+    "101": { "type": "room", "floor": 1, "label": "Guest Room 101" },
+    "102": { "type": "room", "floor": 1, "label": "Guest Room 102" },
+    "H1":  { "type": "hallway", "floor": 1, "label": "North Hallway" },
+    "EX1": { "type": "exit", "floor": 1, "label": "Main Lobby Exit" },
+    
+    "301": { "type": "room", "floor": 3, "label": "Guest Room 301" },
+    "302": { "type": "room", "floor": 3, "label": "Guest Room 302" },
+    "H3":  { "type": "hallway", "floor": 3, "label": "Floor 3 Hallway" },
+    
+    "ST_N": { "type": "hallway", "floor": 2, "label": "North Stairs" },
+    "ST_S": { "type": "hallway", "floor": 2, "label": "South Stairs" }
+  },
+  "adjacencies": {
+    "101": ["H1"],
+    "102": ["H1"],
+    "H1": ["101", "102", "ST_N", "EX1"],
+    "EX1": ["H1", "ST_S"],
+    
+    "301": ["H3"],
+    "302": ["H3"],
+    "H3": ["301", "302", "ST_N", "ST_S"],
+    
+    "ST_N": ["H3", "H1"],
+    "ST_S": ["H3", "EX1"]
+  }
+}
