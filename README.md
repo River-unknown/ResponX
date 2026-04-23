@@ -43,7 +43,7 @@ graph TD
 ```
 
 ### The Building Graph (Adjacency List)
-To execute fast response times, the `mock_building.json` uses an Adjacency List for instant `O(1)` node look-ups, representing our floor structure perfectly for Breadth-First Searches.
+To execute fast response times, the `mock_building.json` uses an Adjacency List for instant `O(1)` node look-ups, representing our floor structure perfectly.
 
 ### In-Memory Distributed State
 `state.js` maintains the status of the environment entirely in-memory using dictionaries and arrays to cut out disk-read latency completely. It tracks both the `hazard layer` (fire/smoke locations) and the `occupancy layer` (who is where). 
