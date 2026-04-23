@@ -16,14 +16,14 @@ describe('Crisis Flow Simulation', () => {
     }
   });
 
-  test('Input (Fire at H3) -> Output (Route bypassing H3)', async () => {
+  test('Input (Fire at H3, 100 intensity) -> Output (Route bypassing H3)', async () => {
     // Check initial status
     let res = await request(app).get('/api/v1/status');
     expect(res.body.hazards.length).toBe(0);
 
     // Register a mock guest directly into state for testing
     const { updateOccupant } = require('../data/state');
-    updateOccupant('test_socket_1', { guestId: 'g_1', room: '301', role: 'guest' });
+    updateOccupant('test_socket_1', { room: '301', role: 'guest' });
 
     // Inject hazard at H3
     res = await request(app)
@@ -31,6 +31,7 @@ describe('Crisis Flow Simulation', () => {
       .send({ type: 'Fire', location: 'H3', intensity: 100 });
     
     expect(res.status).toBe(200);
+    expect(res.body.message).toContain('Verified Crisis');
     expect(getGlobalState().hazards[0].location).toBe('H3');
 
     // The logic directly.
@@ -56,6 +57,16 @@ describe('Crisis Flow Simulation', () => {
     expect(card.payload.title).toBe('EVACUATE NOW');
     // Path should be 101 -> H1
     expect(card.payload.instruction).toContain('North Hallway');
+  });
+
+  test('AI Triage: Advisory alert for low intensity fire', async () => {
+    const res = await request(app)
+      .post('/api/v1/trigger')
+      .send({ type: 'Smoke', location: '101', intensity: 60 });
+    
+    expect(res.status).toBe(200);
+    expect(res.body.message).toContain('Advisory issued');
+    expect(getGlobalState().hazards.length).toBe(0); // Advisory does not add hazard in this prototype
   });
 
   test('Simulate endpoint triggers multiple hazards', async () => {
