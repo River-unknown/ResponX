@@ -48,9 +48,13 @@ const updateOccupant = (socketId, occupantData) => {
       status: 'Safe'
     };
   } else {
-    // Only update non-PII fields
-    if (occupantData.room) state.occupants[socketId].room = occupantData.room;
-    if (occupantData.status) state.occupants[socketId].status = occupantData.status;
+    // Explicit allow-list for non-PII field updates
+    const allowed = ['room', 'status', 'role'];
+    for (const key of allowed) {
+      if (key in occupantData && occupantData[key] !== undefined) {
+        state.occupants[socketId][key] = occupantData[key];
+      }
+    }
   }
 };
 
