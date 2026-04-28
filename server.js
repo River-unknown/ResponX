@@ -57,14 +57,14 @@ app.get('/api/v1/status', (req, res) => {
 });
 
 // 2. Triage - Injects a hazard into the system
-app.post('/api/v1/trigger', (req, res) => {
+app.post('/api/v1/trigger', async (req, res) => {
   const { type, location, intensity } = req.body;
   if (!type || !location) {
     return res.status(400).json({ error: 'Missing type or location' });
   }
 
   // Heuristic AI Triage
-  const triageResult = verifyEvent(req.body);
+  const triageResult = await verifyEvent(req.body);
 
   if (triageResult.verified) {
     const newHazard = updateHazard(type, location, intensity);
