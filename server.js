@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const cors = require('cors');
 
 const buildingData = require('./data/mock_building.json');
 const { getGlobalState, updateHazard, updateOccupant, resetState, purgeIncidentData } = require('./data/state');
@@ -9,6 +10,7 @@ const { verifyEvent } = require('./logic/ai_engine');
 const { verifyIncidentCode, verifyTacticalToken } = require('./logic/security');
 
 const app = express();
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 const server = http.createServer(app);
