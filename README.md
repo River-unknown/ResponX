@@ -8,11 +8,12 @@ We constructed the environment relying on core fast-paced technologies:
 * **Express.js** to handle REST API commands like Triage sensors.
 * **Socket.io** to manage real-time multicast connections grouped by user roles and locations (using Namespaces and Volatile emits).
 * **Jest** to ensure strict automated checks for our pathfinding behavior.
+* **Google Gemini AI** for advanced heuristic triage of IoT events, providing accurate confidence scoring for crisis verification.
 
 ### Innovative AI Integration & Security
 
-#### Heuristic AI Triage
-Our system employs a multi-stage verification engine that assesses IoT telemetry against probabilistic models to filter high-noise hospitality environments, ensuring 99% alert reliability. It separates alerts into Verified Crises, Advisories, and False Positives.
+#### Heuristic AI Triage with Google Gemini
+Our system employs a multi-stage verification engine that assesses IoT telemetry against probabilistic models to filter high-noise hospitality environments, ensuring 99% alert reliability. It separates alerts into Verified Crises, Advisories, and False Positives. Now powered by Google Gemini for real-time analysis of event payloads.
 
 #### Dynamic Hazard Expansion Modeling
 Unlike static routing, Sentinel implements a weighted graph traversal that treats nodes adjacent to fire as "Expansion Risks," preemptively routing guests through "Green Zones" before danger propagates.
@@ -27,7 +28,7 @@ First responders use a JWT-based authentication system backed by secure environm
 
 ```mermaid
 graph TD
-    A[IoT Sensor] -->|Payload| B(AI Triage Layer)
+    A[IoT Sensor] -->|Payload| B(AI Triage Layer with Gemini)
     B -->|> 0.85 Confidence| C[Verified Crisis]
     B -->|0.50 - 0.85 Confidence| D[Advisory]
     B -->|< 0.50 Confidence| E[False Positive]
@@ -86,6 +87,30 @@ The `server.js` exposes core functionality:
 
 ### Verification
 A full automated testing suite (`tests/crisis_flow.test.js`) runs validation endpoints confirming the mathematical rigour backing this structural model is accurate: 
+
+## Setup and Deployment
+
+### Prerequisites
+- Node.js installed locally.
+- Google Cloud account with billing enabled.
+- Gemini API key from [Google AI Studio](https://aistudio.google.com/).
+
+### Local Setup
+1. Clone the repository and install dependencies: `npm install`.
+2. Set the Gemini API key as an environment variable: `export GEMINI_API_KEY=your_api_key_here`.
+3. Run tests: `npm run test`.
+4. Start the server: `npm run start`.
+
+### Cloud Deployment to Google Cloud Run
+1. Build and push the Docker image to Google Container Registry (GCR):
+   ```
+   gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/edge-hub-backend .
+   ```
+2. Deploy to Cloud Run:
+   ```
+   gcloud run deploy edge-hub-backend --image gcr.io/YOUR_PROJECT_ID/edge-hub-backend --platform managed --allow-unauthenticated --set-env-vars GEMINI_API_KEY=your_api_key_here
+   ```
+3. Access the deployed app at the provided URL.
 
 ### Running Locally
 1. `npm install`
